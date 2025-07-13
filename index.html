@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Военный Шифратор</title>
+  <style>
+    body {
+      background-color: #1b1b1b;
+      color: #c0f0c0;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #aaffaa;
+      text-shadow: 0 0 5px #0f0;
+      margin-bottom: 30px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 80px);
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #3b4f2a;
+      color: white;
+      font-size: 20px;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 2px 2px 5px #000;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #5f7f3a;
+    }
+
+    .output {
+      font-size: 24px;
+      color: #ffff99;
+      margin-top: 20px;
+    }
+
+    .log {
+      margin-top: 10px;
+      color: #888;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Система Шифрования Доступа</h1>
+
+  <div class="button-grid">
+    <button onclick="enterDigit(1)">1</button>
+    <button onclick="enterDigit(2)">2</button>
+    <button onclick="enterDigit(3)">3</button>
+    <button onclick="enterDigit(4)">4</button>
+    <button onclick="enterDigit(5)">5</button>
+    <button onclick="enterDigit(6)">6</button>
+    <button onclick="enterDigit(7)">7</button>
+    <button onclick="enterDigit(8)">8</button>
+    <button onclick="enterDigit(9)">9</button>
+    <button onclick="enterDigit(10)">10</button>
+  </div>
+
+  <div class="button-row">
+    <button onclick="enterSwitch('ВКЛ')">ВКЛ</button>
+    <button onclick="enterSwitch('ВКЛ')">ВКЛ</button>
+    <button onclick="enterSwitch('ВЫКЛ')">ВЫКЛ</button>
+    <button onclick="enterSwitch('ВЫКЛ')">ВЫКЛ</button>
+  </div>
+
+  <div class="output" id="result">Введите код и шифр</div>
+  <div class="log" id="log"></div>
+
+  <script>
+    let digitCode = [];
+    let switchCode = [];
+
+    function enterDigit(digit) {
+      if (digitCode.length < 4) {
+        digitCode.push(digit);
+        updateLog();
+        checkAccess();
+      }
+    }
+
+    function enterSwitch(state) {
+      if (switchCode.length < 4) {
+        switchCode.push(state);
+        updateLog();
+        checkAccess();
+      }
+    }
+
+    function updateLog() {
+      document.getElementById('log').innerText =
+        "Цифры: [" + digitCode.join(", ") + "] | Шифр: [" + switchCode.join(", ") + "]";
+    }
+
+    function checkAccess() {
+      const correctDigits = [2, 4, 5, 5];
+      const correctSwitch = ['ВКЛ', 'ВКЛ', 'ВЫКЛ', 'ВЫКЛ'];
+
+      if (digitCode.length === 4 && switchCode.length === 4) {
+        const digitsMatch = JSON.stringify(digitCode) === JSON.stringify(correctDigits);
+        const switchMatch = JSON.stringify(switchCode) === JSON.stringify(correctSwitch);
+
+        if (digitsMatch && switchMatch) {
+          const randomCode = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
+          document.getElementById('result').innerText =
+            "🔓 Доступ разрешён. Код двери: " + randomCode;
+        } else {
+          document.getElementById('result').innerText =
+            "❌ Ошибка. Неверный код или шифр.";
+        }
+
+        digitCode = [];
+        switchCode = [];
+        setTimeout(updateLog, 100); // Обновить лог после сброса
+      }
+    }
+  </script>
+</body>
+</html>
